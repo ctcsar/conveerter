@@ -1,0 +1,30 @@
+version: '2'
+services:
+#  web:
+#    image: nginx:latest
+#    ports:
+#      - "8080:80"
+#    volumes:
+#      - ./web:/web
+#      - ./site.conf:/etc/nginx/conf.d/site.conf
+#    links:
+#      - php
+#      - db
+  php:
+    image: yiisoftware/yii2-php:8.1-apache-latest
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+    - "8000:80"
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
+      - ./create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
+    ports:
+      - "3306:3306"
