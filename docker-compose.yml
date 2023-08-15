@@ -1,15 +1,5 @@
 version: '2'
 services:
-#  web:
-#    image: nginx:latest
-#    ports:
-#      - "8080:80"
-#    volumes:
-#      - ./web:/web
-#      - ./site.conf:/etc/nginx/conf.d/site.conf
-#    links:
-#      - php
-#      - db
   php:
     image: yiisoftware/yii2-php:8.1-apache-latest
     volumes:
@@ -17,6 +7,17 @@ services:
       - ./:/app:delegated
     ports:
     - "8000:80"
+
+  composer:
+    image: composer
+    ports:
+      - "8001:80"
+    volumes:
+      - ./composer.json:/composer/composer.json
+      - ./vendor:/composer/vendor
+    container_name: composer
+    working_dir: /composer
+    command: install
   db:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
